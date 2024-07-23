@@ -120,6 +120,23 @@ object = {
 `,
 		},
 
+		"AttributeWithCommaInObject": {
+			input: `
+object = {
+  attribute2 = "C"
+}
+`,
+			query: "object|attribute3.value",
+			opts:  []hcledit.Option{hcledit.WithQuerySeparator('|')},
+			value: "D",
+			want: `
+object = {
+  attribute2       = "C"
+  attribute3.value = "D"
+}
+`,
+		},
+
 		"Block": {
 			input: `
 `,
@@ -155,6 +172,19 @@ prev {}`,
 			want: `
 prev {}
 // test comment
+block "label1" "label2" {
+}
+`,
+		},
+
+		"Block with new line": {
+			input: `
+`,
+			query: "block",
+			opts:  []hcledit.Option{hcledit.WithNewLine()},
+			value: hcledit.BlockVal("label1", "label2"),
+			want: `
+
 block "label1" "label2" {
 }
 `,
